@@ -1,0 +1,97 @@
+% test.tex
+\title{Minkowski Polyhedral Model\cite{LinkReference1}}
+
+\author{Javier de Juan\cite{Author1}}
+
+\newcommand{\abstractText}{\noindent
+Polyhedral loop transformatin is being around since decades. However, the initial model proposed by Feautrier remains unchanged since its creation. This paper restat the affine model utilizing modern geometry and advanced algebra topics (tensors). 
+Secondly, one of the major deficiencies of the initial model is the absence of a  space transformation where the variables live.
+In this paper we propose a space-time container based on Minkowski geometry which help us to unify both transformation in time and in space.
+}
+
+%%%%%%%%%%%%%%%%%
+% Configuration %
+%%%%%%%%%%%%%%%%%
+
+\documentclass[12pt, a4paper, twocolumn]{article}
+\usepackage{xurl}
+\usepackage[super,comma,sort&compress]{natbib}
+\usepackage{abstract}
+\renewcommand{\abstractnamefont}{\normalfont\bfseries}
+\renewcommand{\abstracttextfont}{\normalfont\small\itshape}
+\usepackage{lipsum}
+
+%%%%%%%%%%%%%%
+% References %
+%%%%%%%%%%%%%%
+
+% If changing the name of the bib file, change \bibliography{test} at the bottom
+\begin{filecontents}{test.bib}
+
+@misc{LinkReference1,
+  title        = "Link Title",
+  author       = "Link Creator(s)",
+  howpublished = "\url{https://example.com/}",
+}
+
+@misc{Author1,
+  author       = "LastName, FirstName",
+  howpublished = "\url{mailto:email@example.com}",
+}
+
+@article{ArticleReference1,
+  author  = "Lastname1, Firstname1 and Lastname2, Firstname2",
+  title   = "Article title",
+  year    = "Year",
+  journal = "Journal name",
+  note    = "\url{https://dx.doi.org/...}",
+}
+
+\end{filecontents}
+
+% Any configuration that should be done before the end of the preamble:
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, urlcolor=blue, linkcolor=blue, citecolor=blue}
+
+\begin{document}
+
+%%%%%%%%%%%%
+% Abstract %
+%%%%%%%%%%%%
+
+\twocolumn[
+  \begin{@twocolumnfalse}
+    \maketitle
+    \begin{abstract}
+      \abstractText
+      \newline
+      \newline
+    \end{abstract}
+  \end{@twocolumnfalse}
+]
+
+%%%%%%%%%%%
+% Article %
+%%%%%%%%%%%
+
+\section{The Polyhedral Model}
+
+State-of-the-art literature covering Polyhedral Model is often difficult to read, however the underlying idea is pretty straightforward: Statements enclosed in for loop sequences are scanned and execution dates are filtered out . The Polyhedral transformation then builds affine expressions over this execution dates in order to obtain an equivalent code optimizing parallel execution.
+PUT EXAMPLE HERE
+
+\section{The Polyhedral Affine Transformation}
+
+\lipsum[1]
+
+%%%%%%%%%%%%%%
+% References %
+%%%%%%%%%%%%%%
+
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{test}
+
+\end{document}
+
+% Create PDF on Linux:
+% FILE=test; pkill -9 -f ${FILE} &>/dev/null; rm -f ${FILE}*aux ${FILE}*bbl ${FILE}*bib ${FILE}*blg ${FILE}*log ${FILE}*out ${FILE}*pdf &>/dev/null; pdflatex -halt-on-error ${FILE}; bibtex ${FILE} && pdflatex ${FILE} && pdflatex ${FILE} && (xdg-open ${FILE}.pdf &)

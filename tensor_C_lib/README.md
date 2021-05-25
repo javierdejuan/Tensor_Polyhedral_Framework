@@ -1,7 +1,12 @@
-### Tensor C library 
-./compile.sh
+### Tensor C library
+[WORK IN PROGRESS]
+#### Goals
+This C library implements Tensor algebra for symbolic calculus as well as integer or double element type.
+#### Compilation and execution
+```./compile.sh```
 
-./tensor
+```/tensor```
 
 for debug info:
-./compile.sh -DDEBUG
+
+```./compile.sh -DDEBUG```

@@ -49,7 +49,7 @@ void list_tuple_print(list_tuple* l)
    if(!l) return;
    LOG printf("[");
    for(size_t i=0 ; i<l->elems; i++)
-       LOG printf("%c:%zu ",l->p[i].c,l->p[i].n);
+        LOG printf("%c:%zu ",l->p[i].c,l->p[i].n);
    LOG printf("]");
 }
 

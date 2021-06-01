@@ -1,9 +1,11 @@
+#include  <stdlib.h>
+#include  <string.h>
 #include "constraint.h"
 
 void tensor_constraint_free(constraint* c)
 {
-    tensor_free(coeff);
-    tensor_free(lambfa);
+    tensor_free(c->coeff);
+    tensor_free(c->lambda);
     free(c);
 }
 constraint* tensor_create_constraint_dimensional(int dimin,tensor* gamma,tensor* lambda,int type)
@@ -20,7 +22,7 @@ constraint* tensor_create_constraint_dimensional(int dimin,tensor* gamma,tensor*
 constraint* tensor_create_constraint_conditional(int dimout,int dimin,tensor* gamma, tensor* lambda,int type){
     constraint* conditional    = (constraint*) calloc(sizeof(constraint),1);
     conditional->isconditional = 1 ;
-    conditional->dimout        = dimout1;
+    conditional->dimout        = dimout;
     conditional->dimin         = dimin;
     conditional->coeff         = tensor_copy(gamma);
     conditional->lambda        = tensor_copy(lambda);

@@ -56,6 +56,8 @@ typedef struct tensor{
                struct tensor** t;
        };
 }tensor;
+tensor* tensor_create_from_params(char* indeces, char* lowerupper, int dimensions, int statements, int variables, int parameters);
+tensor* tensor_create_lambda(tensor* gamma);
 tensor* tensor_create(char* indeces,char* upperlower,size_t* sizes,int init,int type);
 tensor* tensor_copy(tensor* ptensor);
 void    tensor_copy_elems(tensor* dest,tensor* source);

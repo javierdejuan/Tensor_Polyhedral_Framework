@@ -2,10 +2,23 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <ctype.h>
 #include "tensor.h"
-//#define DEBUG 0
 #include "macro.h"
 /* string manipulation */
+static int is_str_digit(char* str)
+{
+    int len = strlen(str);
+
+    for(int i=0; i<len; i++)
+    {
+        if(str[i] <'0' || str[i] >'9')
+            return 0;
+
+    }
+    return 1;
+
+}
 char* findUnion(char* str1, char* str2){
 
     int f, p = 0;
@@ -126,11 +139,11 @@ char* list_str_access(list_str* plist_str,int elem){
 }
 list_str* list_str_update(list_str* plist_str,int id, char* elem){
     if(id<plist_str->index||(!id&&!plist_str->index)){
-	free(plist_str->elems[id]);
-	plist_str->elems[id]=strdup(elem);
+	    free(plist_str->elems[id]);
+	    plist_str->elems[id]=strdup(elem);
     }
     else
-        LOG printf("\n[list_str_update] invalid index.");
+         printf("\n[list_str_update] invalid index.");
 
     return plist_str;
 }
@@ -300,46 +313,47 @@ char* list_str_dot_product(list_str* a, list_str*b){
       char* term2 = b->elems[i];
       int n1 ;
       int n2 ;
+
       int term1_is_digit = sscanf(term1,"%d",&n1);
       int term2_is_digit = sscanf(term2,"%d",&n2);
 
 
       if(    term1_is_digit > 0 && term2_is_digit > 0){
       
-	int n  = n1*n2;
-	sign = n >= 0 ? 1 : -1 ;
-	if(n==0)
-	  strcpy(buff,"");
-	else
-	  sprintf(buff,"%d",abs(n));
+         int n  = n1*n2;
+         sign = n >= 0 ? 1 : -1 ;
+         if(n==0)
+            strcpy(buff,"");
+         else
+            sprintf(buff,"%d",abs(n));
     
       }
       else if(term1_is_digit == 0 && term2_is_digit > 0){
 
-	 sign = n2 >= 0 ? 1 : -1 ;
-	 if(n2==0)
-	   strcpy(buff,"");
-	 else if(abs(n2)==1)
-	   sprintf(buff,"%s",term1);
-	 else
-	   sprintf(buff,"%d%s",abs(n2),term1);
+         sign = n2 >= 0 ? 1 : -1 ;
+         if(n2==0)
+           strcpy(buff,"");
+         else if(abs(n2)==1)
+           sprintf(buff,"%s",term1);
+         else
+           sprintf(buff,"%d%s",abs(n2),term1);
 	 
       }
       else if(term1_is_digit > 0 && term2_is_digit == 0){
 
-	 sign = n1 >= 0 ? 1 : -1 ;
-	 if(n1==0)
-	   strcpy(buff,"");
-	 else if(abs(n1)==1)
-	   sprintf(buff,"%s",term1);
-	 else
-	   sprintf(buff,"%d%s",abs(n1),term1);
+         sign = n1 >= 0 ? 1 : -1 ;
+         if(n1==0)
+           strcpy(buff,"");
+         else if(abs(n1)==1)
+           sprintf(buff,"%s",term2);
+         else
+           sprintf(buff,"%d%s",abs(n1),term2);
 
       }
       else if(term1_is_digit == 0 && term2_is_digit == 0){
 
-	 sign = 1 ;
-	 sprintf(buff,"%s%s",term1,term2);
+         sign = 1 ;
+         sprintf(buff,"%s%s",term1,term2);
 
       }
       if(strlen(buff)==0) continue;
@@ -363,6 +377,7 @@ char* list_str_dot_product(list_str* a, list_str*b){
 	      else        { strcpy(dot_product,"-"); strcat(dot_product,buff);}
 
       }
+      LOG printf("\n[list_str_dot_product] dot_product:%s",dot_product);  
     }
   
     return dot_product;
@@ -429,12 +444,12 @@ list_str* list_str_substract(list_str* a, list_str* b){
 list_str* list_str_sum(list_str* a, list_str* b){
 
    if(!a||!b){
-      LOG printf("\n[list_str_dot_product] null pointers received.");
+      printf("\n[list_str_sum] null pointers received.");
       return NULL;      
    }
 
    if(a->size!=b->size){
-      LOG printf("\n[list_str_dot_product] different vector sizes.");
+      printf("\n[list_str_sum] different vector sizes.");
       return NULL;
    }
 
@@ -447,38 +462,54 @@ list_str* list_str_sum(list_str* a, list_str* b){
 
       char* term1 = a->elems[i];
       char* term2 = b->elems[i];
-      int n1 ;
-      int n2 ;
-      int term1_is_digit = sscanf(term1,"%d",&n1);
-      int term2_is_digit = sscanf(term2,"%d",&n2);
+
+      int n1 = 0; sscanf(term1,"%d",&n1);
+      int n2 = 0; sscanf(term2,"%d",&n2);
+
+      
+      int term1_is_digit = is_str_digit(term1);
+      int term2_is_digit = is_str_digit(term2);
+      
+
+
+      LOG printf("\n[list_str_sum] term1:%s is_digit:%d term2:%s is_digit:%d n1:%d n2:%d",term1,term1_is_digit,term2,term2_is_digit,n1,n2);
 
       if(    term1_is_digit > 0 && term2_is_digit > 0){
       
-	int n  = n1+n2;
-	if(n==0)
-	  strcpy(buff,"");
-	else
-	  sprintf(buff,"%d",n);
+          int n  = n1+n2;
+	      if(n==0)
+	          strcpy(buff,"");
+	      else
+	          sprintf(buff,"%d",n);
     
       }
       else if(term1_is_digit == 0 && term2_is_digit > 0){
 
-	 if(n2==0)
-	   sprintf(buff,"%s",term1);
-	 else
-	   sprintf(buff,"%s%+d",term1,n2);
+	      if(n2==0)
+	          sprintf(buff,"%s",term1);
+	      else
+	          sprintf(buff,"%s%+d",term1,n2);
 	 
       }
       else if(term1_is_digit > 0 && term2_is_digit == 0){
-
-	   sprintf(buff,"%+d+%s",n1,term2);
+         
+          if(n1==0)
+              sprintf(buff,"%s",term2);
+          else if(strchr(term2,'-'))
+              sprintf(buff,"%d%s",n1,term2);
+          else 
+              sprintf(buff,"%d+%s",n1,term2);
 
       }
       else if(term1_is_digit == 0 && term2_is_digit == 0){
-
-	 sprintf(buff,"%s+%s",term1,term2);
+            
+          if(strchr(term2,'-'))
+              sprintf(buff,"%s%s",term1,term2);
+          else
+              sprintf(buff,"%s+%s",term1,term2);
 
       }
+  
      list_str_add(res,strdup(buff));
    }
    
@@ -634,11 +665,15 @@ void stack_print(stack* pstack){
 void tensor_set_elem(tensor* ptensor,list_tuple* tuple,char* elem)
 {
     tensor* pfound = tensor_access_with_tuple(ptensor,tuple);
-    int id = tuple->p[tuple->elems-1].n;
+    int i;
+    for(i = 0 ; i < tuple->elems ; i++){
+        if(tuple->p[i].c == pfound->index)
+            break;
+    }
+    int id = tuple->p[i].n;
+    
     LOG printf("\n[tensor_set_elem] leave:%s size:%zu id:%d ",pfound->id,pfound->size,id);
 
-    list_tuple_print(tuple);
-    
     char* val=NULL;
     if(strlen(ptensor->id)==0) id=0;
     pfound->p=list_str_update(pfound->p,id,elem); 
@@ -661,7 +696,7 @@ tensor* tensor_access_with_tuple(tensor* ptensor,list_tuple* tuple)
 	while(pfound->index!=tuple->p[visitor].c) {visitor++;}
         id=tuple->p[visitor].n;
         if(id > pfound->size - 1){
-            LOG printf("\n[tensor_access_with_tuple] Bad request: index overflow.");
+            printf("\n[tensor_access_with_tuple] Bad request: index overflow.");
             return NULL;
         }
         if(!pfound->isleave)
@@ -867,7 +902,12 @@ size_t tensor_get_n_nodes(size_t* sizes,int indeces){
   return nodes;
 }
 int tensor_get_n_indeces(tensor* ptensor){
-    return strlen(ptensor->id);
+    int cnt = 0 ; 
+    for(int i=0;i<strlen(ptensor->id);i++){
+        if(isdigit(ptensor->id[i])) cnt++;
+    }
+
+    return strlen(ptensor->id)-cnt;
 }
 size_t* tensor_get_sizes(tensor* ptensor)
 {  
@@ -880,16 +920,16 @@ size_t* tensor_get_sizes(tensor* ptensor)
       return sizes;
     } 
    
-    sizes=malloc(sizeof(size_t)*ptensor->size);
-    int index=0;
-    tensor* pvisitor=ptensor;
-    while(index < ptensor->size){
-            sizes[index]=pvisitor->size;
-            if(!pvisitor->isleave)
-                pvisitor=pvisitor->t[0];
-            index++;
+    int indeces = 0 ;
+    indeces = tensor_get_n_indeces(ptensor);
+    sizes=malloc(sizeof(size_t)*indeces);
+    
+    for(int i=0 ; i < indeces; i++){
+        tensor* pvisitor = tensor_access_index(ptensor,ptensor->id[i]);
+        sizes[i]=pvisitor->size;
     }
-    for(int i=0;i<ptensor->size;i++)LOG printf("\n[tensor_get_sizes] indeces:%s size[%d]=%zu",ptensor->id,i,sizes[i]);
+
+    for(int i=0;i<indeces;i++)LOG printf("\n[tensor_get_sizes] indeces:%s size[%d]=%zu",ptensor->id,i,sizes[i]);
     return sizes;
  
 }
@@ -966,7 +1006,7 @@ tensor* tensor_copy(tensor* ptensor)
     for(i=0; i < nindices; i++){
         str[i]  = visitor->isupper ? '+' : '-';
         visitor = visitor->t[0];
-    }
+    }    
     str[i] = '\0';
     LOG printf("\n[tensor_copy] indeces:%s upperlower:%s",ptensor->id,str);
     size_t* sizes = tensor_get_sizes(ptensor);
@@ -1005,7 +1045,8 @@ void nested_loops(size_t cur,list_tuple* l,list_tuple* l_cur,tensor* t_res,tenso
     	}
 	    if(cur==l->elems-1){
             LOG printf("\n[nested_loops] ");
-            list_tuple_print(l_cur);
+           
+            //list_tuple_print(l_cur);
 	        switch(t_res->type){
             case 0:{
     	        char* res   = tensor_elem_access_with_tuple(t_res,l_cur);
@@ -1276,12 +1317,44 @@ char* sum_indeces(char* a,char* b)
 
 tensor* tensor_access_index(tensor* t,char index){
   tensor* pvisitor = t;
-
+  if(isdigit(index) && pvisitor->size)             return tensor_access_index(pvisitor->t[0],index); 
   if(pvisitor->index==index)                       return pvisitor;
   if(pvisitor->size)                               return tensor_access_index(pvisitor->t[0],index);
   if(pvisitor->isleave && pvisitor->index!=index)  return NULL;
 }
+static void tensor_normalize_recursive(tensor*t)
+{
+    if(t->id[0] >='0' || t->id[0] <= '9'){
 
+        char buff[256];
+        int k;
+        int cnt=0;
+        printf("\n[tensor_normalize_recursive] t->id:%s",t->id);
+        for(k=0;k<strlen(t->id);k++){
+            if(!isdigit(t->id[k]))
+                buff[cnt++]=t->id[k];
+        }
+        buff[cnt]='\0';
+        free(t->id);
+        t->id=strdup(buff);
+        printf("\n[tensor_normalize_recursive] t->id:%s",t->id);
+        if(t->isleave)
+            return;
+        for(int i=0; i< t->size; i++)
+        {
+            tensor_normalize_recursive(t->t[i]);
+
+        }
+    }
+}    
+static tensor* tensor_normalize(tensor* t)
+{
+    tensor* norm = tensor_copy(t);
+    if(isdigit(norm->id[0]))
+        tensor_normalize_recursive(norm);
+    tensor_print(norm);
+    return norm;
+}
 tensor* tensor_einsum(tensor* a,tensor* b)
 {
   tensor* ptensor=NULL;
@@ -1367,7 +1440,7 @@ tensor* tensor_einsum(tensor* a,tensor* b)
   
   LOG printf("\n[tensor_einsum] tensor_result:%s tensor_big:%s tensor_small:%s iterations:%s indeces:%d",ptensor->id,t_big->id,t_small->id,st_union,iter_len);
   
-
+ 
   free(st_union);
   free(st_intersection);
   free(st_xor);
@@ -1378,7 +1451,73 @@ tensor* tensor_einsum(tensor* a,tensor* b)
   free(id_c);
   return ptensor;
 }
+tensor* tensor_create_lambda(tensor* gamma)
+{
+    if(!gamma) return NULL;
+    tensor* pvisitor = gamma;
+    while(!pvisitor->isleave) pvisitor = pvisitor->t[0];
+    size_t size_leave[1];
+    size_leave[0] = pvisitor->size;
+    char id[16];
+    sprintf(id,"%c",pvisitor->index);
+    tensor* lambda = tensor_create(id,"+",size_leave,0,0);
+    return lambda;
+}
 
+tensor* tensor_create_from_params(char* indeces, char* lowerupper, int dimensions, int statements, int variables, int parameters)
+{
+    int     grouped   = strlen(indeces);
+    size_t* sizes     = NULL;
+    size_t  numcoeff  = 0;
+    tensor* gamma     = NULL;
+    char    elem[256];  strcpy(elem,"");
+    char    leave[256]; strcpy(leave,"");
+    list_str* coeff   = NULL;
+    sizes    = (size_t*)calloc(sizeof(size_t),grouped);
+
+    switch(grouped){
+        case 3:{
+            numcoeff = 4 + 2 + parameters + 1;
+            sizes[0] = dimensions;
+            sizes[1] = statements;
+            sizes[2] = numcoeff;
+
+            gamma    = tensor_create(indeces,lowerupper,sizes,0,0);
+            coeff    = list_str_alloc(numcoeff);
+
+            for(int k=0; k< numcoeff;k++){
+                sprintf(elem,"i%d",k);
+                list_str_add(coeff,strdup(elem));
+            }
+            for( int i = 0 ; i < dimensions ; i++)
+                for( int j = 0 ; j < statements ; j++){
+                    sprintf(leave,"%d%d%c",i,j,indeces[2]);
+                    tensor_fill(gamma,leave,coeff);
+            }
+            list_str_free(coeff);
+            break;
+        }
+        case 2:{
+            numcoeff = 4 + statements*2 + parameters + 1;
+            sizes[0] = dimensions;
+            sizes[1] = numcoeff;
+            gamma    = tensor_create(indeces,lowerupper,sizes,0,0);
+            coeff    = list_str_alloc(numcoeff);
+            for(int k=0; k< numcoeff;k++){
+                sprintf(elem,"i%d",k);
+                list_str_add(coeff,strdup(elem));
+            }
+             for( int i = 0 ; i < dimensions ; i++){
+                sprintf(leave,"%d%c",i,indeces[1]);
+                tensor_fill(gamma,leave,coeff);
+            }
+            list_str_free(coeff);
+            break;
+        }
+    }
+    free(sizes);
+    return gamma;
+}
 /* unit tests */
 static void list_str_tests(void){
 
@@ -1806,6 +1945,53 @@ static void einsum_tests()
   printf("\n");
 }
 
+static void constraint_tests()
+{
+    printf("\n[constraint_test] start:");
+    int ndimensions  = 2 ;
+    int nstatements  = 2 ;
+    int nvariables   = 2 ; 
+    int nparameters  = 0 ;
+    tensor* gamma    = NULL;
+    tensor* lambda   = NULL;
+    int*    values   = NULL;
+
+    gamma = tensor_create_from_params("dsr","+--",ndimensions,nstatements,nvariables,nparameters);
+    tensor_print_elems(gamma);
+    lambda = tensor_create_lambda(gamma);
+    values=(int*)calloc(sizeof(int),lambda->size);
+    int i; 
+    for(i=0; i<4;i++) values[i]=0;
+    
+    values[i++]= 1;
+    values[i++]=-1;
+    values[i++]= 1;
+
+    list_str* values_str = list_str_from_int_vector(values,lambda->size);
+    
+    tensor_fill(lambda,"r",values_str);
+    list_str_free(values_str);
+
+    tensor_print(lambda);
+    tensor_print_elems(lambda);
+    tensor* t_dim_0 = tensor_access(gamma,"0sr");
+    tensor* t       = tensor_einsum(gamma,lambda);
+    tensor_print_elems(t);
+    tensor_free(t);
+    
+//    tensor_free(lambda);
+//    tensor_free(gamma);
+/*
+    gamma=tensor_create_from_params("dr","+-",ndimensions,nstatements,nvariables,nparameters);
+    tensor_print_elems(gamma);
+    lambda=tensor_create_lambda(gamma);
+    tensor_print(lambda);
+*/
+    free(values);
+    tensor_free(lambda);
+    tensor_free(gamma);
+    printf("\n[constraint_test] end");
+}
 void main(void){
 
  LOG printf("\nTensor C library.\n");
@@ -1813,9 +1999,10 @@ void main(void){
  //list_str_tests();
  //stack_tests();
  //combinations_tests();
- tensor_tests();
+ //tensor_tests();
  //influence_tests();
  //einsum_tests();
+ constraint_tests();
  LOG printf("\n");
 
 }

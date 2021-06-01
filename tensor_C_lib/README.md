@@ -10,7 +10,7 @@ Usage:
 
 ``` 
 /*
-test: Define ome rank 2 tensor and ome rank 1 tensor
+test: Define one rank 2 tensor and one rank 1 tensor
 define common index j
 perform einsten summation over j
 */

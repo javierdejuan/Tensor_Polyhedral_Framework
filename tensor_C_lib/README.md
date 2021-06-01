@@ -5,6 +5,7 @@ Hence, we can write the following statements:
 * int or double or float -> is a rank 0 Tensor.
 * arrays                 -> are rank 2 Tensors.
 * multdimensional arrays -> are rank > 2 Tensors.
+
 Usage:
 
 ``` 

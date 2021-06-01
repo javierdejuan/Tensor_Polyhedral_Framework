@@ -5,7 +5,7 @@ This C library implements Tensor algebra for symbolic calculus as well as intege
 #### Compilation and execution
 ```./compile.sh```
 
-```/tensor```
+```./tensor```
 
 for debug info:
 

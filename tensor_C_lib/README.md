@@ -2,9 +2,9 @@
 [WORK IN PROGRESS]
 The underlying idea of this Tensor library is to unify all numerical data types in C into a tensor unique type.
 Hence, we can write the following statements:
-int or double or float -> is a rank 0 Tensor.
-arrays                 -> are rank 2 Tensors.
-multdimensional arrays -> are rank > 2 Tensors.
+* int or double or float -> is a rank 0 Tensor.
+* arrays                 -> are rank 2 Tensors.
+* multdimensional arrays -> are rank > 2 Tensors.
 Usage:
 
 ``` 
